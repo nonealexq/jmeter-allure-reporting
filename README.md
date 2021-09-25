@@ -1,4 +1,4 @@
-# Allure JMeter report example
+# JMeter Allure reporting
 - Are you writing functional tests in JMeter?
 - Is it difficult to understand what went wrong using standard means?
 - Want to see detailed test reports?
@@ -67,6 +67,6 @@ Allure Report looks like this:
 It should also work with the rest of default assertions.
 
 
-##Troubleshooting:
+## Troubleshooting:
 - In test case with multiple steps if you forget to add one of the parameters in one of the steps, 
 this step won't make it to the report and something will definitely go wrong, so be careful!
