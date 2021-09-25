@@ -1,0 +1,8 @@
+version: "3.3"
+services:
+  jmeter:
+    container_name: "jmeter"
+    image: nonealexq/jmeter:5.4.1
+    volumes:
+      - ./:/mnt/jmeter
+    command: jmeter -n -t /mnt/jmeter/allure-jmeter-example.jmx -l /result/allure-results/result.jtl -j /result/jmeter.log

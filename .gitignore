@@ -1,0 +1,9 @@
+apache-jmeter/
+allure-results-example/
+allure-report-example/
+*.txt
+*.iml
+*.log
+.git/
+.idea/
+*.DS_Store
