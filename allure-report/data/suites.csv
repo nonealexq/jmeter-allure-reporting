@@ -1,0 +1,6 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Sun Sep 26 14:00:34 YEKT 2021","Sun Sep 26 14:00:34 YEKT 2021","215","","","","","","Get capsule with serial: space",""
+"failed","Sun Sep 26 14:00:34 YEKT 2021","Sun Sep 26 14:00:35 YEKT 2021","634","","","","","","Check some capsules in DB",""
+"failed","Sun Sep 26 14:00:30 YEKT 2021","Sun Sep 26 14:00:34 YEKT 2021","3439","","","","","","Check capsules",""
+"passed","Sun Sep 26 14:00:34 YEKT 2021","Sun Sep 26 14:00:34 YEKT 2021","195","","","","","","Get capsule with serial: ABC",""
+"failed","Sun Sep 26 14:00:34 YEKT 2021","Sun Sep 26 14:00:34 YEKT 2021","192","","","","","","Get capsule with serial: randomString(257 chars)",""

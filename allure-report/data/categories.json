@@ -1,0 +1,60 @@
+{
+  "uid" : "4b4757e66a1912dae1a509f688f20b0f",
+  "name" : "categories",
+  "children" : [ {
+    "name" : "Product defects",
+    "children" : [ {
+      "name" : "[Sample: Get capsule with serial: C101 in sub step: Check status failed with reason: Value expected to be 'active', but found 'retired']\n[Sample: Get upcoming capsules in sub step: C204 Assertion failed with reason: C204 is not upcomming!]\n[Sample: Get upcoming capsules in sub step: C203 Assertion failed with reason: C203 is not upcomming!]\n",
+      "children" : [ {
+        "name" : "Check capsules",
+        "uid" : "f374a0f726fb3383",
+        "parentUid" : "595af37d9e50bb8dc0a74b980b6acb13",
+        "status" : "failed",
+        "time" : {
+          "start" : 1632646830636,
+          "stop" : 1632646834075,
+          "duration" : 3439
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "parameters" : [ ]
+      } ],
+      "uid" : "595af37d9e50bb8dc0a74b980b6acb13"
+    }, {
+      "name" : "[Sample: Get capsule with serial: randomString(257 chars) in sub step: Check error failed with reason: Value expected to be 'Not Found, but case status should be 'failed'', but found 'Not Found']\n",
+      "children" : [ {
+        "name" : "Get capsule with serial: randomString(257 chars)",
+        "uid" : "b46de60ccb78435d",
+        "parentUid" : "239315f50d1b6e56f30d73759ff8fa50",
+        "status" : "failed",
+        "time" : {
+          "start" : 1632646834324,
+          "stop" : 1632646834516,
+          "duration" : 192
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "parameters" : [ ]
+      } ],
+      "uid" : "239315f50d1b6e56f30d73759ff8fa50"
+    }, {
+      "name" : "[Sample: Check capsule's id in db in sub step: capsule_serial id Assertion failed with reason: Response was null]\n",
+      "children" : [ {
+        "name" : "Check some capsules in DB",
+        "uid" : "56d4ebfa94b09afe",
+        "parentUid" : "426d52296f3496645a510713d4bbb7fe",
+        "status" : "failed",
+        "time" : {
+          "start" : 1632646834758,
+          "stop" : 1632646835392,
+          "duration" : 634
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "parameters" : [ ]
+      } ],
+      "uid" : "426d52296f3496645a510713d4bbb7fe"
+    } ],
+    "uid" : "8fb3a91ba5aaf9de24cc8a92edc82b5d"
+  } ]
+}

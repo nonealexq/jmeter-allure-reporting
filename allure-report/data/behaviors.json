@@ -1,0 +1,82 @@
+{
+  "uid" : "b1a8273437954620fa374b796ffaacdd",
+  "name" : "behaviors",
+  "children" : [ {
+    "name" : "SpaceX-Capsules",
+    "children" : [ {
+      "name" : "Positive",
+      "children" : [ {
+        "name" : "Check capsules",
+        "uid" : "f374a0f726fb3383",
+        "parentUid" : "2a59e8b0d011380aab274db88826bf43",
+        "status" : "failed",
+        "time" : {
+          "start" : 1632646830636,
+          "stop" : 1632646834075,
+          "duration" : 3439
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "parameters" : [ ]
+      }, {
+        "name" : "Check some capsules in DB",
+        "uid" : "56d4ebfa94b09afe",
+        "parentUid" : "2a59e8b0d011380aab274db88826bf43",
+        "status" : "failed",
+        "time" : {
+          "start" : 1632646834758,
+          "stop" : 1632646835392,
+          "duration" : 634
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "parameters" : [ ]
+      } ],
+      "uid" : "2a59e8b0d011380aab274db88826bf43"
+    }, {
+      "name" : "Validation",
+      "children" : [ {
+        "name" : "Get capsule with serial: ABC",
+        "uid" : "45f90d80d490d1d0",
+        "parentUid" : "aa2c725490370630f2864ae04507de1a",
+        "status" : "passed",
+        "time" : {
+          "start" : 1632646834123,
+          "stop" : 1632646834318,
+          "duration" : 195
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "parameters" : [ ]
+      }, {
+        "name" : "Get capsule with serial: randomString(257 chars)",
+        "uid" : "b46de60ccb78435d",
+        "parentUid" : "aa2c725490370630f2864ae04507de1a",
+        "status" : "failed",
+        "time" : {
+          "start" : 1632646834324,
+          "stop" : 1632646834516,
+          "duration" : 192
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "parameters" : [ ]
+      }, {
+        "name" : "Get capsule with serial: space",
+        "uid" : "d2528b9dd873988c",
+        "parentUid" : "aa2c725490370630f2864ae04507de1a",
+        "status" : "passed",
+        "time" : {
+          "start" : 1632646834522,
+          "stop" : 1632646834737,
+          "duration" : 215
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "parameters" : [ ]
+      } ],
+      "uid" : "aa2c725490370630f2864ae04507de1a"
+    } ],
+    "uid" : "2a9c2bf2bab57582f6f8bf0489a92e1e"
+  } ]
+}

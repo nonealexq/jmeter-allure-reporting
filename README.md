@@ -24,10 +24,13 @@ chmod +x installer.sh
 ```
 Then you should change in User Defined Variables two variables to absolute path and click RUN
 
-_ALLURE_REPORT_PATH: absolute path to dir allure-results
+_ALLURE_REPORT_PATH: 
+ - To run it via docker-compose just put '/result/allure-results'
+ - To run local put here the absolute path to folder allure-results
 
-_ALLURE_CONFIG_PATH: absolute path to file allure-reporter.groovy
-
+_ALLURE_CONFIG_PATH: 
+ - To run it via docker-compose just put allure-reporter.groovy (This file is already there in the root)
+ - To run local put here the absolute path to file allure-reporter.groovy 
 
 ## How it works:
 First, you need to initialize the parameters that are required to generate test results:

@@ -1,0 +1,112 @@
+{
+  "uid" : "b46de60ccb78435d",
+  "name" : "Get capsule with serial: randomString(257 chars)",
+  "fullName" : "org.jmeter.com.spacex-capsules.validation.get_capsule_with_serial:_randomstring(257_chars)",
+  "historyId" : "397ea122-c312-4410-a532-e9f0bd58f829",
+  "time" : {
+    "start" : 1632646834324,
+    "stop" : 1632646834516,
+    "duration" : 192
+  },
+  "status" : "failed",
+  "statusMessage" : "[Sample: Get capsule with serial: randomString(257 chars) in sub step: Check error failed with reason: Value expected to be 'Not Found, but case status should be 'failed'', but found 'Not Found']\n",
+  "flaky" : false,
+  "newFailed" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "status" : "failed",
+    "statusMessage" : "[Sample: Get capsule with serial: randomString(257 chars) in sub step: Check error failed with reason: Value expected to be 'Not Found, but case status should be 'failed'', but found 'Not Found']\n",
+    "steps" : [ {
+      "name" : "Get capsule with serial: randomString(257 chars)",
+      "time" : {
+        "start" : 1632646834324,
+        "stop" : 1632646834516,
+        "duration" : 192
+      },
+      "status" : "failed",
+      "statusMessage" : "",
+      "steps" : [ {
+        "name" : "Ignore 404",
+        "time" : { },
+        "status" : "passed",
+        "statusMessage" : "",
+        "steps" : [ ],
+        "attachments" : [ ],
+        "parameters" : [ ],
+        "stepsCount" : 0,
+        "attachmentsCount" : 0,
+        "shouldDisplayMessage" : true,
+        "hasContent" : true
+      }, {
+        "name" : "Check error",
+        "time" : { },
+        "status" : "failed",
+        "statusMessage" : "Value expected to be 'Not Found, but case status should be 'failed'', but found 'Not Found'",
+        "steps" : [ ],
+        "attachments" : [ ],
+        "parameters" : [ ],
+        "stepsCount" : 0,
+        "attachmentsCount" : 0,
+        "shouldDisplayMessage" : true,
+        "hasContent" : true
+      } ],
+      "attachments" : [ {
+        "uid" : "c4a7b98daafb3697",
+        "name" : "Request",
+        "source" : "c4a7b98daafb3697.txt",
+        "type" : "application/json",
+        "size" : 297
+      }, {
+        "uid" : "f4ba2181c1188588",
+        "name" : "Response",
+        "source" : "f4ba2181c1188588.txt",
+        "type" : "application/json",
+        "size" : 22
+      } ],
+      "parameters" : [ ],
+      "stepsCount" : 2,
+      "attachmentsCount" : 2,
+      "shouldDisplayMessage" : false,
+      "hasContent" : true
+    } ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 3,
+    "attachmentsCount" : 2,
+    "shouldDisplayMessage" : true,
+    "hasContent" : true
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "framework",
+    "value" : "jmeter"
+  }, {
+    "name" : "language",
+    "value" : "java"
+  }, {
+    "name" : "story",
+    "value" : "Validation"
+  }, {
+    "name" : "feature",
+    "value" : "SpaceX-Capsules"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ ],
+  "links" : [ ],
+  "hidden" : false,
+  "retry" : false,
+  "extra" : {
+    "severity" : "normal",
+    "retries" : [ ],
+    "categories" : [ {
+      "name" : "Product defects",
+      "matchedStatuses" : [ ],
+      "flaky" : false
+    } ],
+    "tags" : [ ]
+  },
+  "source" : "b46de60ccb78435d.json",
+  "parameterValues" : [ ]
+}
