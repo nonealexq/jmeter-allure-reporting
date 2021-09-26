@@ -113,7 +113,7 @@ void addAllSteps() {
 					.getFailureMessage().toString() + ']' + '\\' + 'n'
 
 			allureCaseFailReason = allureCaseFailReason + allureMainFailReason
-			vars.put('allureCaseFailReason', allureCaseFailReason + allureStepFailReason)
+			vars.put('allureCaseFailReason', allureCaseFailReason)
 			allureCaseResult = 'failed'
 			vars.put('allureCaseResult', 'failed')
 			allureStepResult = 'failed'
@@ -241,7 +241,7 @@ def addMoreMainStep(boolean addPoint){
 			'"status":"' + allureCaseResult + '",' +
 			'"statusDetails":' +
 				'{' +
-					'"message":"'+ allureCaseFailReason.replace("\"", "\'")  + '"' +
+					'"message":"'+ allureCaseFailReason.replace("\"", "\'").replace("\n", " ")  + '"' +
 				'},' +
 			'"stage":"' + stage + '",' +
 			'"steps":' +
