@@ -1,6 +1,6 @@
 apache-jmeter/
 allure-results-example/
-allure-report-example/
+allure-report*/
 *.txt
 *.iml
 *.log
