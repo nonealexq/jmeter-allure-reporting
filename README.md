@@ -53,8 +53,13 @@ Do not use parameters if case has one step:
 
 Default report looks like this:
 ![Optional Text](images/jmeter_view_result_tree.png)
+- After running the script will create files in the folder allure-results for generating the report
+, next just generate Allure Report with command:
+```bash
+allure generate allure-results --clean -o allure-report
+```
 
-Allure Report looks like this:
+Allure Report would look like this:
 ![Optional Text](images/allure-report.png)
 
 
