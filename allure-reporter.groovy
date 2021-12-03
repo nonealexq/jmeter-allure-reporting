@@ -2,10 +2,11 @@
  	Author: Alexey Chichuk
 	Description: Groovy for create allure-results for JMeter
 	Date Create: 29.07.2021
-	Date Update: 24.09.2021
+	Date Update: 03.12.2021
 */
 
 import org.apache.jmeter.util.Document;
+import java.util.regex.Matcher;
 
 /*
 	Annotations AllureStory и AllureFeature, must be initialized ahead of time before tests or in
@@ -30,11 +31,19 @@ allureReportPath = vars['_ALLURE_REPORT_PATH']
 */
 
 empty = ''
+tags = empty
+allureCaseFailReason = empty
+critical = vars['critical']
 
 if (vars['allureCaseFailReason'] == null){
 	allureCaseFailReason = empty
 }
 else allureCaseFailReason = vars['allureCaseFailReason']
+
+if (vars['tags'] == null){
+	tags = empty
+}
+else tags = vars['tags']
 
 stage = 'finished'
 type = 'application/json'
@@ -76,11 +85,27 @@ if (Parameters.contains('tika_xml')) {
 	byte [] samplerdata = ctx.getPreviousResult().getResponseData()
 	String converted = Document.getTextFromDocument(samplerdata)
 	if ((m = (converted =~ /sharedStrings.xml\n(.*)/))) {
-  		responseData = m[0].toString()
+		responseData = m[0].toString()
+	}
+    else responseData = converted.toString()
+}
+
+if (Parameters.contains('tags=')) {
+	if (Parameters =~ ~/tags=\[(.+?)\]/) {
+		def tags_memory = Matcher.lastMatcher[0][1].split(',')
+		println (tags_memory.size());
+		for(int i = 0; i < tags_memory.size(); i++) {
+	        tags += '{' +
+				'"name":"tag",' +
+				'"value":"' + tags_memory[i] + '"' +
+				'},'
+			vars.put('tags', tags)
+			}
 		}
 }
 
-if (Parameters.empty){
+
+if ((!Parameters.contains('stop') && !Parameters.contains('continue')  && !Parameters.contains('start'))){
 	allureDisplayName = sampler.getName()
 } else allureDisplayName = vars['AllureCaseName']
 
@@ -154,7 +179,7 @@ else if ( (Parameters.contains('stop') && !Parameters.empty || Parameters.contai
 	Case with single step
 */
 
-else if ((Parameters.empty)){
+else if (!Parameters.contains('stop') && !Parameters.contains('continue')  && !Parameters.contains('start')) {
 	vars.put('allureCaseResult', 'passed')
 	vars.put('AllurePrevMainSteps', empty)
 	vars.put('caseTimeStart',prev.getStartTime().toString())
@@ -236,6 +261,14 @@ def addMoreMainStep(boolean addPoint){
 	if (AllurePrevMainSteps.contains('"status":"failed"')) allureCaseResult = 'failed'
 		else allureCaseResult = 'passed'
 
+	if (Parameters.contains('skipped')) {
+		allureCaseResult = 'skipped'
+	} 
+
+	if (Parameters.contains('critical') && allureStepResult == 'failed'){
+		critical = 'yes'
+		vars.put('critical', 'yes')}
+
 	String AResult = empty +
 			'{"name":"' + allureDisplayName + '",' +
 			'"status":"' + allureCaseResult + '",' +
@@ -245,9 +278,9 @@ def addMoreMainStep(boolean addPoint){
 				'},' +
 			'"stage":"' + stage + '",' +
 			'"steps":' +
-					'[' +
-						AllurePrevMainSteps +
-					'],' +
+				'[' +
+					AllurePrevMainSteps +
+				'],' +
 			'"start":' + vars['caseTimeStart'] + ',' +
 			'"stop":' + prev.getEndTime()+',' +
 			'"uuid":"' + attachUUID+'","historyId":"' + attachUUID + '",' +
@@ -257,6 +290,11 @@ def addMoreMainStep(boolean addPoint){
 						'"name":"framework",' +
 						'"value":"jmeter"' +
 					'},' +
+					tags +
+					'{' +
+						'"name":"layer",' +
+						'"value":"jmeter"' +
+					'},'+
 					'{' +
 						'"name":"language",' +
 						'"value":"java"' +
@@ -292,7 +330,7 @@ var response = new PrintWriter(allureReportPath + '/' + attachUUID + '-response-
 	Write result to file if case  end
 */
 
-if (Parameters.empty || Parameters.contains('stop')) {
+if ((!Parameters.contains('stop') && !Parameters.contains('continue')  && !Parameters.contains('start')) || Parameters.contains('stop')) {
 	println('ALLURE_CASE_RESULT: ' + allureFullName + ': ' + allureCaseResult.toUpperCase())
 	var result = new PrintWriter(allureReportPath + '/' + attachUUID + '-result.json')
 	result.write(vars['AResult'])
@@ -300,6 +338,14 @@ if (Parameters.empty || Parameters.contains('stop')) {
 	vars.put('AllurePrevMainSteps', empty)
 	vars.put('AResult', empty)
 	vars.put('SummarySubSteps', empty)
+	vars.put('critical', empty)
 	vars.put('allureCaseResult', 'passed')
-	vars.put('allureCaseFailReason', empty)
+  	vars.put('allureCaseFailReason', empty)
+  	vars.put('tags', empty)
+
+	if (critical == 'yes') {
+		println("CRITICAL_TEST_CASE_FAILED: " + allureFullName + " FAILED!");
+		println("STOPPING....");
+		prev.setStopThread(true);
+	}
 }
