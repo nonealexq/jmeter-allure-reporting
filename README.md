@@ -74,6 +74,18 @@ Allure Report would look like this:
 
 It should also work with the rest of default assertions.
 
+## UPD:
+If you would like to ignore case, just add 'skipped' to parameters near 'stop':
+![Optional Text](images/skipped_parameter.png)
+![Optional Text](images/allure-report-skipped-case.png)
+
+If you have critical main case to prepare data for next tests, you may use 'critical' parameters.
+If this case will fail - all next tests (thread group) will be stopped.
+![Optional Text](images/critical_parameter.png)
+
+If you want to add tags - do like this
+![Optional Text](images/tags_parameter.png)
+![Optional Text](images/allure-report-tags.png)
 
 ## Troubleshooting:
 - In test case with multiple steps if you forget to add one of the parameters in one of the steps, 
