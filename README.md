@@ -111,11 +111,6 @@ If you have critical main case to prepare data for next tests, you may use 'crit
 If this case fails - all next tests (thread group) will be stopped.
 ![Optional Text](images/critical_parameter.png)
 
-### Tags annotations
-If you want to add tags - do like this
-![Optional Text](images/tags_parameter.png)
-![Optional Text](images/allure-report-tags.png)
-
 ### Parameters annotations
 Plugin Markdown Table Data-driven Controller allow to use parameterized tests. We can put our params to the report
 1. Add Markdown Controller with params
@@ -155,12 +150,12 @@ You can add some description to your test with this variable
 ---
 
 ### Add any custom label
-If you want to add some custom label (for example severity/owner) - you can do it!
+If you want to add some custom label (for example severity/owner/tag) - you can do it!
    ```bash
   vars.put("allure.label.severity","critical");
   vars.put("allure.label.owner","None Alex");
+  vars.put("allure.label.tag","smoke");
    ```
-
 ---
 Look and feel with additional features:
 ![Optional Text](images/epic-owner-description-in-jmeter.png)
