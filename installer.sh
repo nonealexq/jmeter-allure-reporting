@@ -4,7 +4,7 @@
 #Description: Main steps to start use these scripts
 
 _PWD=$(pwd)
-_JMETER_VERSION="5.4.3"
+_JMETER_VERSION="5.4.1"
 _JMETER_DOWNLOAD_URL="https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-$_JMETER_VERSION.tgz"
 
 
