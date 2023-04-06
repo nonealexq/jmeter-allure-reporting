@@ -163,6 +163,13 @@ Look and feel with additional features:
 
 ---
 
+### Remove safety data in request
+We do not recommend storing sensitive information in reports. By default, all mentions of such information are overwritten
+![Optional Text](images/safety-data-in-jmeter.png)
+![Optional Text](images/safety-data-in-allure.png)
+
+---
+
 ## Log details to console
 1. Logging of test passing time 
 2. The number of tests passed is logged 
