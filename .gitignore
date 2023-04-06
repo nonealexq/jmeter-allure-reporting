@@ -7,3 +7,5 @@ allure-report*/
 .git/
 .idea/
 *.DS_Store
+*-attachment
+*-result.json
