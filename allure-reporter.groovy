@@ -134,6 +134,7 @@ if (Parameters.contains('tika_xml')) {
 	if ((m = (converted =~ /sharedStrings.xml\n(.*)/))) {
 		responseData = m[0].toString()
 	} else responseData = converted.toString()
+	responseType = 'text/plain'
 }
 
 /*
