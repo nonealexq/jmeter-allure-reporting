@@ -197,7 +197,7 @@ void clearAllLabelsFromEnv(){
 	copy = new HashSet(vars.entrySet());
 	for (Iterator iter = copy.iterator(); iter.hasNext();) {
 		var = iter.next();
-		if ( var.getKey().startsWith("allure.label") && !solotest) {
+		if ( (var.getKey().startsWith("allure.label") && !solotest) || var.getKey().startsWith("allure.label.AS_ID")) {
 			vars.remove(var.getKey());
 		}
 	}
