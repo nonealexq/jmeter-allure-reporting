@@ -455,7 +455,6 @@ def addMoreMainStep(boolean addPoint){
 	if (prevMainSteps.contains('"status":"failed"')) {
 		allureCaseResult = 'failed'
 		if (!Parameters.contains('skipped')) {
-			allureCaseResult = 'skipped'
 			failedCountTests += 1
 		}
 	} else {
