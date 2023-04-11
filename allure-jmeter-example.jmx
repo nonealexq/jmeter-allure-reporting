@@ -42,7 +42,7 @@
             </elementProp>
             <elementProp name="_ALLURE_CONFIG_PATH" elementType="Argument">
               <stringProp name="Argument.name">_ALLURE_CONFIG_PATH</stringProp>
-              <stringProp name="Argument.value">allure-reporter.groovy</stringProp>
+              <stringProp name="Argument.value">/opt/allure-reporter.groovy</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
           </collectionProp>
