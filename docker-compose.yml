@@ -6,5 +6,4 @@ services:
     volumes:
       - ./:/mnt/jmeter
       - ./allure-results:/result/allure-results
-      - ./:/result
     command: jmeter -n -t /mnt/jmeter/allure-jmeter-example.jmx -l /result/allure-results/result.jtl -j /result/jmeter.log
