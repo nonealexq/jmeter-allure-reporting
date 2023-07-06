@@ -147,6 +147,14 @@ You can add some description to your test using this variable
    ```bash
   vars.put("allure.description","Lorem Ipsum is simply dummy text of the printing and typesetting industry. \\nLorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book");
    ```
+
+### Add link
+Add one link to your test like this:
+   ```bash
+   vars.put("allure.link","Some Link Value, https://github.com/nonealexq/jmeter-allure-reporting");
+   // With space!
+   ```
+![Optional Text](images/add-link-support.png)
 ---
 
 ### Add any custom label

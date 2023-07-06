@@ -29,7 +29,7 @@ empty = ''
 /*
 	Init main annotations to empty value
  */
-epicNameForFullName = empty; allureStepDisplayName = empty
+epicNameForFullName = empty; allureStepDisplayName = empty; link = empty
 labels = empty; issues = empty; tempVar = empty; stepParameters = empty; mainParameters = empty
 timeoutFailureText = 'java.net.SocketTimeoutException: Read timed out'
 
@@ -149,8 +149,21 @@ void addMainFieldsFromEnv(){
 			if (var.getKey().replaceAll('allure.', '') == 'description'){
 				allureCaseDescription = var.getValue()
 			}
+			if (var.getKey().replaceAll('allure.', '') == 'link'){
+				link += '{' +
+						'"name":"' + var.getValue().toString().split("\\, ")[0] + '",' +
+						'"url":"' + var.getValue().toString().split("\\, ")[1] + '"' +
+						'}'
+				vars.put('link', link)
+			}
 		}
 	}
+}
+
+
+if (vars.get('link') == empty || vars.get('link') == null){
+	link = empty
+	vars.put('link', link)
 }
 
 /*
@@ -201,6 +214,9 @@ void clearAllLabelsFromEnv(){
 		if ( (var.getKey().startsWith("allure.label") && !solotest) || var.getKey().startsWith("allure.label.AS_ID")) {
 			vars.remove(var.getKey());
 		}
+		if ( (var.getKey().startsWith("allure.link") && !solotest) || var.getKey().startsWith("allure.link")) {
+			vars.remove(var.getKey());
+		}
 	}
 }
 
@@ -226,6 +242,7 @@ void clearAllureVariable(){
 	vars.put('allureCaseFailReason', empty)
 	vars.put('issues', empty)
 	vars.put('allure.parameters', null)
+	vars.put('link', null)
 	vars.put('mainParameters', empty)
 	vars.put('loopCounter', null)
 	clearAllLabelsFromEnv()
@@ -506,7 +523,9 @@ def addMoreMainStep(boolean addPoint){
 						'"value":"' + prev.getThreadName().toString() + '"' +
 					'}' +
 			'],' +
-			'"links":[]}'
+			'"links":[' +
+				vars.get('link') +
+				']}'
 
 	vars.put('prevMainSteps', prevMainSteps)
 	vars.put('AResult', AResult)
