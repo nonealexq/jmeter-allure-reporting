@@ -2,10 +2,10 @@
  	Author: Alexey Chichuk
 	Description: Groovy for create allure-results for JMeter
 	Date Create: 29.07.2021
-	Date Update: 03.04.2023
-	Version: 1.4.11
+	Date Update: 07.07.2023
+	Version: 1.4.16
 */
-	version = '1.4.11'
+	version = '1.4.16'
 
 import java.time.LocalDateTime
 import groovy.json.JsonSlurper
@@ -29,7 +29,7 @@ empty = ''
 /*
 	Init main annotations to empty value
  */
-epicNameForFullName = empty; allureStepDisplayName = empty
+epicNameForFullName = empty; allureStepDisplayName = empty; links = empty
 labels = empty; issues = empty; tempVar = empty; stepParameters = empty; mainParameters = empty
 timeoutFailureText = 'java.net.SocketTimeoutException: Read timed out'
 
@@ -101,6 +101,15 @@ if ( prev.getContentType().replaceAll(";.*","").contains('/') ){
 	responseType = prev.getContentType().replaceAll(";.*","")
 } else responseType = 'text/plain'
 
+/*
+	If we wanna see own content-type - write it force in parameters
+ */
+if (Parameters.contains('content_type=')) {
+	if (Parameters =~ ~/content_type=\[(.+?)]/) {
+		def issues_memory = Matcher.lastMatcher[0][1].split(',')
+		responseType = issues_memory[0]
+	}
+}
 
 /*
 	Main logic to build .result file of allure format
@@ -192,6 +201,36 @@ void addAllLabelsFromEnv(){
 }
 
 /*
+	Adding all links to allure report
+ */
+void addAllLinksFromEnv(){
+	/*
+		Calc index of link hash
+	 */
+	tempVar = new HashSet(vars.entrySet()); indexHash = 0; indexAddLinks = 0
+	for (Iterator iter = tempVar.iterator(); iter.hasNext();) {
+		var = iter.next();
+		if ( var.getKey().startsWith("allure.link") ) {
+			indexHash++
+		}
+	}
+
+	vars.entrySet().each { var ->
+		if (var.getKey() =~ 'allure.link'){
+			links += '{' +
+					'"name":"' + var.getKey().replaceAll('allure.link.', '')+ '",' +
+					'"url":"' + var.getValue().toString() + '"' +
+					'}'
+			indexAddLinks++
+			if (indexHash > indexAddLinks ){
+				links += ','
+			}
+		}
+	}
+}
+
+
+/*
 	Clear all labels after stop
  */
 void clearAllLabelsFromEnv(){
@@ -199,6 +238,19 @@ void clearAllLabelsFromEnv(){
 	for (Iterator iter = copy.iterator(); iter.hasNext();) {
 		var = iter.next();
 		if ( (var.getKey().startsWith("allure.label") && !solotest) || var.getKey().startsWith("allure.label.AS_ID")) {
+			vars.remove(var.getKey());
+		}
+	}
+}
+
+/*
+	Clear all labels after stop
+ */
+void clearAllLinksFromEnv(){
+	copy = new HashSet(vars.entrySet());
+	for (Iterator iter = copy.iterator(); iter.hasNext();) {
+		var = iter.next();
+		if ( (var.getKey().startsWith("allure.link") && !solotest)) {
 			vars.remove(var.getKey());
 		}
 	}
@@ -229,6 +281,7 @@ void clearAllureVariable(){
 	vars.put('mainParameters', empty)
 	vars.put('loopCounter', null)
 	clearAllLabelsFromEnv()
+	clearAllLinksFromEnv()
 }
 
 /*
@@ -475,6 +528,7 @@ def addMoreMainStep(boolean addPoint){
 	}
 
 	addAllLabelsFromEnv()
+	addAllLinksFromEnv()
 	addMainFieldsFromEnv()
 	buildAllureFullName()
 
@@ -506,7 +560,9 @@ def addMoreMainStep(boolean addPoint){
 						'"value":"' + prev.getThreadName().toString() + '"' +
 					'}' +
 			'],' +
-			'"links":[]}'
+			'"links":[' +
+					links +
+				']}'
 
 	vars.put('prevMainSteps', prevMainSteps)
 	vars.put('AResult', AResult)

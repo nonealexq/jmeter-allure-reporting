@@ -147,6 +147,22 @@ You can add some description to your test using this variable
    ```bash
   vars.put("allure.description","Lorem Ipsum is simply dummy text of the printing and typesetting industry. \\nLorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book");
    ```
+### Change response content-type manually
+Content-type is set automatically. If the default content-type of the response is incorrect, you can change it manually:
+
+   ```bash
+    content_type=[application/pdf]
+   ```
+![Optional Text](images/custom-content-type-response.png)
+
+### Add link
+You can add any links to your test like this:
+   ```bash
+   vars.put("allure.link.issue","https://github.com/nonealexq/jmeter-allure-reporting/issues/6");
+vars.put("allure.link.docsLink","https://github.com/nonealexq/jmeter-allure-reporting/blob/master/README.md");
+vars.put("allure.link.myLink","https://github.com/nonealexq");
+   ```
+![Optional Text](images/add-link-support.png)
 ---
 
 ### Add any custom label
