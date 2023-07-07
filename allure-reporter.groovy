@@ -2,10 +2,10 @@
  	Author: Alexey Chichuk
 	Description: Groovy for create allure-results for JMeter
 	Date Create: 29.07.2021
-	Date Update: 03.04.2023
-	Version: 1.4.11
+	Date Update: 07.07.2023
+	Version: 1.4.16
 */
-	version = '1.4.11'
+	version = '1.4.16'
 
 import java.time.LocalDateTime
 import groovy.json.JsonSlurper
@@ -101,6 +101,15 @@ if ( prev.getContentType().replaceAll(";.*","").contains('/') ){
 	responseType = prev.getContentType().replaceAll(";.*","")
 } else responseType = 'text/plain'
 
+/*
+	If we wanna see own content-type - write it force in parameters
+ */
+if (Parameters.contains('content_type=')) {
+	if (Parameters =~ ~/content_type=\[(.+?)]/) {
+		def issues_memory = Matcher.lastMatcher[0][1].split(',')
+		responseType = issues_memory[0]
+	}
+}
 
 /*
 	Main logic to build .result file of allure format
