@@ -149,10 +149,11 @@ You can add some description to your test using this variable
    ```
 
 ### Add link
-Add one link to your test like this:
+You can add any links to your test like this:
    ```bash
-   vars.put("allure.link","Some Link Value, https://github.com/nonealexq/jmeter-allure-reporting");
-   // With space!
+   vars.put("allure.link.issue","https://github.com/nonealexq/jmeter-allure-reporting/issues/6");
+vars.put("allure.link.docsLink","https://github.com/nonealexq/jmeter-allure-reporting/blob/master/README.md");
+vars.put("allure.link.myLink","https://github.com/nonealexq");
    ```
 ![Optional Text](images/add-link-support.png)
 ---

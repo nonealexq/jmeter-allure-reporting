@@ -29,7 +29,7 @@ empty = ''
 /*
 	Init main annotations to empty value
  */
-epicNameForFullName = empty; allureStepDisplayName = empty; link = empty
+epicNameForFullName = empty; allureStepDisplayName = empty; links = empty
 labels = empty; issues = empty; tempVar = empty; stepParameters = empty; mainParameters = empty
 timeoutFailureText = 'java.net.SocketTimeoutException: Read timed out'
 
@@ -149,21 +149,8 @@ void addMainFieldsFromEnv(){
 			if (var.getKey().replaceAll('allure.', '') == 'description'){
 				allureCaseDescription = var.getValue()
 			}
-			if (var.getKey().replaceAll('allure.', '') == 'link'){
-				link += '{' +
-						'"name":"' + var.getValue().toString().split("\\, ")[0] + '",' +
-						'"url":"' + var.getValue().toString().split("\\, ")[1] + '"' +
-						'}'
-				vars.put('link', link)
-			}
 		}
 	}
-}
-
-
-if (vars.get('link') == empty || vars.get('link') == null){
-	link = empty
-	vars.put('link', link)
 }
 
 /*
@@ -205,6 +192,36 @@ void addAllLabelsFromEnv(){
 }
 
 /*
+	Adding all links to allure report
+ */
+void addAllLinksFromEnv(){
+	/*
+		Calc index of link hash
+	 */
+	tempVar = new HashSet(vars.entrySet()); indexHash = 0; indexAddLinks = 0
+	for (Iterator iter = tempVar.iterator(); iter.hasNext();) {
+		var = iter.next();
+		if ( var.getKey().startsWith("allure.link") ) {
+			indexHash++
+		}
+	}
+
+	vars.entrySet().each { var ->
+		if (var.getKey() =~ 'allure.link'){
+			links += '{' +
+					'"name":"' + var.getKey().replaceAll('allure.link.', '')+ '",' +
+					'"url":"' + var.getValue().toString() + '"' +
+					'}'
+			indexAddLinks++
+			if (indexHash > indexAddLinks ){
+				links += ','
+			}
+		}
+	}
+}
+
+
+/*
 	Clear all labels after stop
  */
 void clearAllLabelsFromEnv(){
@@ -214,7 +231,17 @@ void clearAllLabelsFromEnv(){
 		if ( (var.getKey().startsWith("allure.label") && !solotest) || var.getKey().startsWith("allure.label.AS_ID")) {
 			vars.remove(var.getKey());
 		}
-		if ( (var.getKey().startsWith("allure.link") && !solotest) || var.getKey().startsWith("allure.link")) {
+	}
+}
+
+/*
+	Clear all labels after stop
+ */
+void clearAllLinksFromEnv(){
+	copy = new HashSet(vars.entrySet());
+	for (Iterator iter = copy.iterator(); iter.hasNext();) {
+		var = iter.next();
+		if ( (var.getKey().startsWith("allure.link") && !solotest)) {
 			vars.remove(var.getKey());
 		}
 	}
@@ -242,10 +269,10 @@ void clearAllureVariable(){
 	vars.put('allureCaseFailReason', empty)
 	vars.put('issues', empty)
 	vars.put('allure.parameters', null)
-	vars.put('link', null)
 	vars.put('mainParameters', empty)
 	vars.put('loopCounter', null)
 	clearAllLabelsFromEnv()
+	clearAllLinksFromEnv()
 }
 
 /*
@@ -492,6 +519,7 @@ def addMoreMainStep(boolean addPoint){
 	}
 
 	addAllLabelsFromEnv()
+	addAllLinksFromEnv()
 	addMainFieldsFromEnv()
 	buildAllureFullName()
 
@@ -524,7 +552,7 @@ def addMoreMainStep(boolean addPoint){
 					'}' +
 			'],' +
 			'"links":[' +
-				vars.get('link') +
+					links +
 				']}'
 
 	vars.put('prevMainSteps', prevMainSteps)

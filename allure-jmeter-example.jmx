@@ -628,6 +628,9 @@ vars.put(&quot;allure.name&quot;,&quot;Check some capsules in DB before critical
 vars.put(&quot;allure.label.story&quot;,&quot;Error&quot;);
 vars.put(&quot;allure.name&quot;,&quot;With description and owner&quot;);
 vars.put(&quot;allure.label.owner&quot;,&quot;None Alex&quot;);
+vars.put(&quot;allure.link.issue&quot;,&quot;https://github.com/nonealexq/jmeter-allure-reporting/issues/6&quot;);
+vars.put(&quot;allure.link.docsLink&quot;,&quot;https://github.com/nonealexq/jmeter-allure-reporting/blob/master/README.md&quot;);
+vars.put(&quot;allure.link.myLink&quot;,&quot;https://github.com/nonealexq&quot;);
 vars.put(&quot;allure.label.tag&quot;,&quot;smoke&quot;);
 vars.put(&quot;allure.description&quot;,&quot;Lorem Ipsum is simply dummy text of the printing and typesetting industry. \\nLorem Ipsum has been the industry&apos;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book&quot;);
 
@@ -823,6 +826,7 @@ vars.put(&quot;allure.description&quot;,&quot;Lorem Ipsum is simply dummy text o
 vars.put(&quot;allure.label.feature&quot;,&quot;SpaceX-Capsules&quot;);
 vars.put(&quot;allure.label.story&quot;,&quot;Error&quot;);
 vars.put(&quot;allure.name&quot;,&quot;With epic and description and owner&quot;);
+vars.put(&quot;allure.link.issue&quot;,&quot;https://github.com/nonealexq/jmeter-allure-reporting/issues/6&quot;);
 vars.put(&quot;allure.label.owner&quot;,&quot;None Alex&quot;);
 vars.put(&quot;allure.description&quot;,&quot;Lorem Ipsum is simply dummy text of the printing and typesetting industry. \\nLorem Ipsum has been the industry&apos;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book&quot;);
 
