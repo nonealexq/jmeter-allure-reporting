@@ -2,10 +2,10 @@
  	Author: Alexey Chichuk
 	Description: Groovy for create allure-results for JMeter
 	Date Create: 29.07.2021
-	Date Update: 07.07.2023
-	Version: 1.4.16
+	Date Update: 01.09.2023
+	Version: 1.4.17
 */
-	version = '1.4.16'
+	version = '1.4.17'
 
 import java.time.LocalDateTime
 import groovy.json.JsonSlurper
@@ -106,8 +106,8 @@ if ( prev.getContentType().replaceAll(";.*","").contains('/') ){
  */
 if (Parameters.contains('content_type=')) {
 	if (Parameters =~ ~/content_type=\[(.+?)]/) {
-		def issues_memory = Matcher.lastMatcher[0][1].split(',')
-		responseType = issues_memory[0]
+		def content_memory = Matcher.lastMatcher[0][1].split(',')
+		responseType = content_memory[0]
 	}
 }
 
@@ -185,10 +185,12 @@ if (vars.get('allure.parameters') != null) {
 
 /*
 	Adding all labels to allure report
+	But not adding several labels like links
  */
 void addAllLabelsFromEnv(){
 	vars.entrySet().each { var ->
-		if (var.getKey() =~ 'allure.label'){
+		if ( (var.getKey() =~ 'allure.label') && !(var.getKey() =~ 'allure.links') &&
+				!(var.getKey() =~ 'allure.label.tags') && (!Parameters.contains('ignore_tags')) ){
 			labels += '{' +
 					'"name":"' + var.getKey().replaceAll('allure.label.', '').replaceAll('Allure','').toLowerCase() + '",' +
 					'"value":"' + var.getValue().toString() + '"' +
@@ -197,11 +199,26 @@ void addAllLabelsFromEnv(){
 		if (var.getKey().replaceAll('allure.label.', '') == 'epic'){
 			epicNameForFullName = var.getValue().toString().toLowerCase().replace(' ', '_') + '.'
 		}
+
+		/*
+			For several links for example
+			vars.put("allure.label.tags","smoke,api,critical");
+			This is often useful if you are in MarkDown Table Data Driven Controller
+		 */
+		if ( (var.getKey() =~ 'allure.label.tags') && (!Parameters.contains('ignore_tags')) ){
+			if (vars.get('allure.label.tags') =~ ~/(.+)/) {
+				def tags_memory = Matcher.lastMatcher[0][1].split(',')
+				for(int i = 0; i < tags_memory.size(); i++) {
+					addOneLabel("tag",tags_memory[i].toString())
+					log.info("sdlfngdjfbgdbfgkdsg2h9r3uhekbgdfkjbg" + "" + tags_memory.size())
+				}
+			}
+		}
 	}
 }
 
 /*
-	Adding all links to allure report
+	Adding all links to allure report. One-by-one
  */
 void addAllLinksFromEnv(){
 	/*
@@ -216,7 +233,7 @@ void addAllLinksFromEnv(){
 	}
 
 	vars.entrySet().each { var ->
-		if (var.getKey() =~ 'allure.link'){
+		if ( (var.getKey() =~ 'allure.link') && !(var.getKey() =~ 'allure.links') && (!Parameters.contains('ignore_links'))){
 			links += '{' +
 					'"name":"' + var.getKey().replaceAll('allure.link.', '')+ '",' +
 					'"url":"' + var.getValue().toString() + '"' +
@@ -229,6 +246,24 @@ void addAllLinksFromEnv(){
 	}
 }
 
+/*
+	For several links for example
+	vars.put("allure.links","issue,https://github.com/nonealexq/jmeter-allure-reporting/issues/8," + "google.com,https://google.com");
+	This is often useful if you are in MarkDown Table Data Driven Controller
+ */
+if ( (vars.get('allure.links') != null)  && (!Parameters.contains('ignore_links')) ) {
+	if (vars.get('allure.links') =~ ~/(.+)/) {
+		def linkMatch = Matcher.lastMatcher[0][1].toString().split(',')
+		for (int i = 1; i < linkMatch.size(); i+=2) {
+			links += '{' +
+					'"name":"' + linkMatch[i-1] + '",' +
+					'"url":"' + linkMatch[i] + '"' +
+					'},'
+			vars.put('links', links)
+		}
+		links = links[0..-2]
+	}
+} else vars.remove('links')
 
 /*
 	Clear all labels after stop
@@ -237,7 +272,9 @@ void clearAllLabelsFromEnv(){
 	copy = new HashSet(vars.entrySet());
 	for (Iterator iter = copy.iterator(); iter.hasNext();) {
 		var = iter.next();
-		if ( (var.getKey().startsWith("allure.label") && !solotest) || var.getKey().startsWith("allure.label.AS_ID")) {
+		if ( (var.getKey().startsWith("allure.label") && !solotest) ||
+				(var.getKey().startsWith("allure.links") && !solotest) ||
+					var.getKey().startsWith("allure.label.AS_ID") ) {
 			vars.remove(var.getKey());
 		}
 	}
@@ -333,7 +370,7 @@ if (Parameters.contains('parameters=')) {
 void buildAllureFullName(){
 	allureFullName = 'org.jmeter.com.' + epicNameForFullName + vars.get("allure.label.feature").toString().toLowerCase().replace(' ',
 			'_') + '.' + vars.get("allure.label.story").toString().toLowerCase().replace(' ',
-			'_') + '.' + vars.get("allure.name").toString().toLowerCase().replace(' ','_')
+			'_') + '.' + allureDisplayName.toString().toLowerCase().replace(' ','_')
 }
 
 /*
@@ -444,7 +481,7 @@ else {
 def addMoreSubStep(){
 	if (!SummarySubSteps.empty) SummarySubSteps = SummarySubSteps + ','
 	String SubStep = '{' +
-			'"name":"'+ allureStepDisplayName.toString() + '",' +
+			'"name":"'+ allureStepDisplayName.toString().replace("\"", "\'").replace("\\", "\\\\").replace("\n", " ").replace("\t", " ") + '",' +
 				'"status":"' + allureStepResult + '",' +
 				'"stage":"'+ stage +'",' +
 				'"statusDetails":' +
@@ -538,7 +575,7 @@ def addMoreMainStep(boolean addPoint){
 			'"status":"' + allureCaseResult + '",' +
 			'"statusDetails":' +
 				'{' +
-					'"message":"' + allureCaseFailReason.replace("\"", "\'").replace("\n", " ").replace("\t", " ")  + '"' +
+					'"message":"' + allureCaseFailReason.replace("\"", "\'").replace("\n", " ").replace("\\", "\\\\").replace("\t", " ")  + '"' +
 				'},' +
 			'"stage":"' + stage + '",' +
 			'"steps":' +

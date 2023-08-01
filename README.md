@@ -132,6 +132,7 @@ The Markdown Table Data-driven Controller plugin allows you to use parameterized
 4. Run the tests and then generate the report.
    ![Optional Text](images/allure-report-parameter.png)
 
+
 ---
 
 ### Keep in report JSR223 Sampler
@@ -163,6 +164,11 @@ vars.put("allure.link.docsLink","https://github.com/nonealexq/jmeter-allure-repo
 vars.put("allure.link.myLink","https://github.com/nonealexq");
    ```
 ![Optional Text](images/add-link-support.png)
+
+Also, you can add multiple links in one string like:
+   ```bash
+   vars.put("allure.links","issue,https://github.com/nonealexq/jmeter-allure-reporting/issues/8," + "google.com,https://google.com");
+   ```
 ---
 
 ### Add any custom label
@@ -172,6 +178,19 @@ If you want to add some custom label (for example severity/owner/tag) - you can 
   vars.put("allure.label.owner","None Alex");
   vars.put("allure.label.tag","smoke");
    ```
+Also, you can add multiple tags like this:
+   ```bash
+   vars.put("allure.label.tags","critical,smoke,api,");
+   ```
+---
+
+### Ignore links or tags annotations in your solostep tests  
+
+This is often useful if you are create tests in MarkDown Table Data Driven Controller.
+When you need to create report one of the test without tags/links from ```Declare allure annotations``` you can use this parameters:
+- ```ignore_links``` - will not add any links to your solostep test
+- ```ignore_tags``` -  will not add any tags to your solostep test
+
 ---
 Look and feel with additional features:
 ![Optional Text](images/epic-owner-description-in-jmeter.png)
