@@ -210,7 +210,6 @@ void addAllLabelsFromEnv(){
 				def tags_memory = Matcher.lastMatcher[0][1].split(',')
 				for(int i = 0; i < tags_memory.size(); i++) {
 					addOneLabel("tag",tags_memory[i].toString())
-					log.info("sdlfngdjfbgdbfgkdsg2h9r3uhekbgdfkjbg" + "" + tags_memory.size())
 				}
 			}
 		}
