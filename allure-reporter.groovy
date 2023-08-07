@@ -189,8 +189,8 @@ if (vars.get('allure.parameters') != null) {
  */
 void addAllLabelsFromEnv(){
 	vars.entrySet().each { var ->
-		if ( (var.getKey() =~ 'allure.label') && !(var.getKey() =~ 'allure.links') &&
-				!(var.getKey() =~ 'allure.label.tags') && (!Parameters.contains('ignore_tags')) ){
+		if ( (var.getKey() =~ 'allure.label') &&
+				!(var.getKey() =~ 'allure.label.tags')){
 			labels += '{' +
 					'"name":"' + var.getKey().replaceAll('allure.label.', '').replaceAll('Allure','').toLowerCase() + '",' +
 					'"value":"' + var.getValue().toString() + '"' +
@@ -201,7 +201,7 @@ void addAllLabelsFromEnv(){
 		}
 
 		/*
-			For several links for example
+			For several tags for example
 			vars.put("allure.label.tags","smoke,api,critical");
 			This is often useful if you are in MarkDown Table Data Driven Controller
 		 */
