@@ -159,16 +159,25 @@ Content-type is set automatically. If the default content-type of the response i
 ### Add link
 You can add any links to your test like this:
    ```bash
-   vars.put("allure.link.issue","https://github.com/nonealexq/jmeter-allure-reporting/issues/6");
-vars.put("allure.link.docsLink","https://github.com/nonealexq/jmeter-allure-reporting/blob/master/README.md");
-vars.put("allure.link.myLink","https://github.com/nonealexq");
+  vars.put("allure.links","issue,https://github.com/nonealexq/jmeter-allure-reporting/issues/6");
    ```
-![Optional Text](images/add-link-support.png)
 
 Also, you can add multiple links in one string like:
    ```bash
    vars.put("allure.links","issue,https://github.com/nonealexq/jmeter-allure-reporting/issues/8," + "google.com,https://google.com");
    ```
+
+![Optional Text](images/add-link-support.png)
+---
+### Add issues (Only for AllureTMS)
+You can add any issues to your test like this:
+```
+vars.put("allure.label.issues","JIRA_PROJECT_ID-100");
+```
+Also, you can add multiple issues in one string like:
+```
+vars.put("allure.label.issues","JIRA_PROJECT_ID-100,"JIRA_PROJECT_ID-129");
+```
 ---
 
 ### Add any custom label
@@ -176,7 +185,7 @@ If you want to add some custom label (for example severity/owner/tag) - you can 
    ```bash
   vars.put("allure.label.severity","critical");
   vars.put("allure.label.owner","None Alex");
-  vars.put("allure.label.tag","smoke");
+  vars.put("allure.label.tags","smoke");
    ```
 Also, you can add multiple tags like this:
    ```bash
