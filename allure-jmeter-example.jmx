@@ -100,7 +100,9 @@
             <stringProp name="script">vars.put(&quot;allure.label.feature&quot;,&quot;SpaceX-Capsules&quot;);
 vars.put(&quot;allure.label.story&quot;,&quot;Positive&quot;);
 vars.put(&quot;allure.name&quot;,&quot;Check capsules (with skipped params)&quot;);  
-vars.put(&quot;allure.label.tag&quot;,&quot;regress&quot;);
+vars.put(&quot;allure.label.tags&quot;,&quot;regress&quot;);
+vars.put(&quot;allure.label.issues&quot;,&quot;APP-1000,APP-1001&quot;);
+
 
 /*
  * to create case report with multiple steps
@@ -302,7 +304,7 @@ vars.put(&quot;allure.label.tag&quot;,&quot;regress&quot;);
             <stringProp name="parameters"></stringProp>
             <stringProp name="script">vars.put(&quot;allure.label.feature&quot;,&quot;SpaceX-Capsules&quot;);
 vars.put(&quot;allure.label.story&quot;,&quot;Validation&quot;);
-
+vars.put(&quot;allure.label.issues&quot;,&quot;APP-1000,APP-1001&quot;);
 
 /*
  * to create case report with single step
@@ -454,7 +456,98 @@ vars.put(&quot;allure.label.story&quot;,&quot;Validation&quot;);
             <hashTree/>
           </hashTree>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Validation examples (multiple links with ignore_links)" enabled="true"/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="DataBase before critical" enabled="true"/>
+        <hashTree>
+          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Declare allure annotations" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">vars.put(&quot;allure.label.feature&quot;,&quot;SpaceX-Capsules&quot;);
+vars.put(&quot;allure.label.story&quot;,&quot;Positive&quot;);
+vars.put(&quot;allure.name&quot;,&quot;Check some capsules in DB before critical&quot;);  
+
+/*
+ * to create case report with multiple steps
+ * use parameters start/continue/stop
+ * and create variable allure.name
+ */</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223Sampler>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get all capsules" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/v3/capsules</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <com.atlantbh.jmeter.plugins.jsonutils.jsonformatter.JSONFormatter guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonformatter.gui.JSONFormatterGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonformatter.JSONFormatter" testname="jp@gc - JSON Format Post Processor" enabled="true"/>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Get capsule_serial" enabled="true">
+              <stringProp name="JSONPostProcessor.referenceNames">capsule_serial</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$..capsule_serial</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+              <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND</stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Allure.log.info" enabled="true">
+              <stringProp name="cacheKey">false</stringProp>
+              <stringProp name="filename">${_ALLURE_CONFIG_PATH}</stringProp>
+              <stringProp name="parameters">start tags=[db,space-x]</stringProp>
+              <stringProp name="script"></stringProp>
+              <stringProp name="scriptLanguage">groovy</stringProp>
+            </JSR223Assertion>
+            <hashTree/>
+          </hashTree>
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Check capsule&apos;s id in db" enabled="true">
+            <stringProp name="dataSource">exampleDB</stringProp>
+            <stringProp name="queryType">Select Statement</stringProp>
+            <stringProp name="query">select id from example
+	where capsule_serial = &apos;${capsule_serial}&apos;</stringProp>
+            <stringProp name="queryArguments"></stringProp>
+            <stringProp name="queryArgumentsTypes"></stringProp>
+            <stringProp name="variableNames">capsule_serial_id</stringProp>
+            <stringProp name="resultVariable"></stringProp>
+            <stringProp name="queryTimeout"></stringProp>
+            <stringProp name="resultSetMaxRows"></stringProp>
+            <stringProp name="resultSetHandler">Store as String</stringProp>
+          </JDBCSampler>
+          <hashTree>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="capsule_serial id Assertion" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="48634">109</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">2</intProp>
+              <stringProp name="Assertion.scope">variable</stringProp>
+              <stringProp name="Scope.variable">capsule_serial_id_1</stringProp>
+            </ResponseAssertion>
+            <hashTree/>
+            <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Allure.log.info" enabled="true">
+              <stringProp name="cacheKey">false</stringProp>
+              <stringProp name="filename">${_ALLURE_CONFIG_PATH}</stringProp>
+              <stringProp name="parameters">stop</stringProp>
+              <stringProp name="script"></stringProp>
+              <stringProp name="scriptLanguage">groovy</stringProp>
+            </JSR223Assertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Validation examples (with ignore_links)" enabled="true"/>
         <hashTree>
           <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Declare allure annotations" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
@@ -615,7 +708,7 @@ vars.put(&quot;allure.links&quot;,&quot;issue,https://github.com/nonealexq/jmete
             <hashTree/>
           </hashTree>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Validation examples (miltuple tags and with ignore_tags)" enabled="true"/>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Validation examples (with ignore_tags)" enabled="true"/>
         <hashTree>
           <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Declare allure annotations" enabled="true">
             <stringProp name="cacheKey">true</stringProp>
@@ -851,97 +944,6 @@ vars.put(&quot;allure.parameters&quot;,&quot;[capsule_name,test_name]&quot;)
             <hashTree/>
           </hashTree>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="DataBase before critical" enabled="true"/>
-        <hashTree>
-          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Declare allure annotations" enabled="true">
-            <stringProp name="cacheKey">true</stringProp>
-            <stringProp name="filename"></stringProp>
-            <stringProp name="parameters"></stringProp>
-            <stringProp name="script">vars.put(&quot;allure.label.feature&quot;,&quot;SpaceX-Capsules&quot;);
-vars.put(&quot;allure.label.story&quot;,&quot;Positive&quot;);
-vars.put(&quot;allure.name&quot;,&quot;Check some capsules in DB before critical&quot;);  
-
-/*
- * to create case report with multiple steps
- * use parameters start/continue/stop
- * and create variable allure.name
- */</stringProp>
-            <stringProp name="scriptLanguage">groovy</stringProp>
-          </JSR223Sampler>
-          <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get all capsules" enabled="true">
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-              <collectionProp name="Arguments.arguments"/>
-            </elementProp>
-            <stringProp name="HTTPSampler.domain"></stringProp>
-            <stringProp name="HTTPSampler.port"></stringProp>
-            <stringProp name="HTTPSampler.protocol"></stringProp>
-            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/v3/capsules</stringProp>
-            <stringProp name="HTTPSampler.method">GET</stringProp>
-            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          </HTTPSamplerProxy>
-          <hashTree>
-            <com.atlantbh.jmeter.plugins.jsonutils.jsonformatter.JSONFormatter guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonformatter.gui.JSONFormatterGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonformatter.JSONFormatter" testname="jp@gc - JSON Format Post Processor" enabled="true"/>
-            <hashTree/>
-            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Get capsule_serial" enabled="true">
-              <stringProp name="JSONPostProcessor.referenceNames">capsule_serial</stringProp>
-              <stringProp name="JSONPostProcessor.jsonPathExprs">$..capsule_serial</stringProp>
-              <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
-              <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND</stringProp>
-            </JSONPostProcessor>
-            <hashTree/>
-            <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Allure.log.info" enabled="true">
-              <stringProp name="cacheKey">false</stringProp>
-              <stringProp name="filename">${_ALLURE_CONFIG_PATH}</stringProp>
-              <stringProp name="parameters">start tags=[db,space-x]</stringProp>
-              <stringProp name="script"></stringProp>
-              <stringProp name="scriptLanguage">groovy</stringProp>
-            </JSR223Assertion>
-            <hashTree/>
-          </hashTree>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Check capsule&apos;s id in db" enabled="true">
-            <stringProp name="dataSource">exampleDB</stringProp>
-            <stringProp name="queryType">Select Statement</stringProp>
-            <stringProp name="query">select id from example
-	where capsule_serial = &apos;${capsule_serial}&apos;</stringProp>
-            <stringProp name="queryArguments"></stringProp>
-            <stringProp name="queryArgumentsTypes"></stringProp>
-            <stringProp name="variableNames">capsule_serial_id</stringProp>
-            <stringProp name="resultVariable"></stringProp>
-            <stringProp name="queryTimeout"></stringProp>
-            <stringProp name="resultSetMaxRows"></stringProp>
-            <stringProp name="resultSetHandler">Store as String</stringProp>
-          </JDBCSampler>
-          <hashTree>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="capsule_serial id Assertion" enabled="true">
-              <collectionProp name="Asserion.test_strings">
-                <stringProp name="48634">109</stringProp>
-              </collectionProp>
-              <stringProp name="Assertion.custom_message"></stringProp>
-              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-              <boolProp name="Assertion.assume_success">false</boolProp>
-              <intProp name="Assertion.test_type">2</intProp>
-              <stringProp name="Assertion.scope">variable</stringProp>
-              <stringProp name="Scope.variable">capsule_serial_id_1</stringProp>
-            </ResponseAssertion>
-            <hashTree/>
-            <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Allure.log.info" enabled="true">
-              <stringProp name="cacheKey">false</stringProp>
-              <stringProp name="filename">${_ALLURE_CONFIG_PATH}</stringProp>
-              <stringProp name="parameters">stop</stringProp>
-              <stringProp name="script"></stringProp>
-              <stringProp name="scriptLanguage">groovy</stringProp>
-            </JSR223Assertion>
-            <hashTree/>
-          </hashTree>
-        </hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="With description and owner" enabled="true"/>
         <hashTree>
           <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Declare allure annotations and tag" enabled="true">
@@ -950,12 +952,10 @@ vars.put(&quot;allure.name&quot;,&quot;Check some capsules in DB before critical
             <stringProp name="parameters"></stringProp>
             <stringProp name="script">vars.put(&quot;allure.label.feature&quot;,&quot;SpaceX-Capsules&quot;);
 vars.put(&quot;allure.label.story&quot;,&quot;Error&quot;);
-vars.put(&quot;allure.name&quot;,&quot;With description and owner. With solo tag and solo link declaration&quot;);
+vars.put(&quot;allure.name&quot;,&quot;With description and owner v2&quot;);
 vars.put(&quot;allure.label.owner&quot;,&quot;None Alex&quot;);
-vars.put(&quot;allure.link.issue&quot;,&quot;https://github.com/nonealexq/jmeter-allure-reporting/issues/6&quot;);
-vars.put(&quot;allure.link.docsLink&quot;,&quot;https://github.com/nonealexq/jmeter-allure-reporting/blob/master/README.md&quot;);
-vars.put(&quot;allure.link.myLink&quot;,&quot;https://github.com/nonealexq&quot;);
-vars.put(&quot;allure.label.tag&quot;,&quot;smoke&quot;);
+vars.put(&quot;allure.links&quot;,&quot;issue,https://github.com/nonealexq/jmeter-allure-reporting/issues/6,&quot; + &quot;docsLink,https://github.com/nonealexq/jmeter-allure-reporting/blob/master/README.md,&quot; + &quot;myLink,https://github.com/nonealexq&quot;);
+vars.put(&quot;allure.label.tags&quot;,&quot;smoke&quot;);
 vars.put(&quot;allure.description&quot;,&quot;Lorem Ipsum is simply dummy text of the printing and typesetting industry. \\nLorem Ipsum has been the industry&apos;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book&quot;);
 
 /*
@@ -1346,7 +1346,7 @@ vars.put(&quot;allure.description&quot;,&quot;Lorem Ipsum is simply dummy text o
 vars.put(&quot;allure.label.feature&quot;,&quot;SpaceX-Capsules&quot;);
 vars.put(&quot;allure.label.story&quot;,&quot;Error&quot;);
 vars.put(&quot;allure.name&quot;,&quot;With epic and description and owner&quot;);
-vars.put(&quot;allure.link.issue&quot;,&quot;https://github.com/nonealexq/jmeter-allure-reporting/issues/6&quot;);
+vars.put(&quot;allure.links&quot;,&quot;issue,https://github.com/nonealexq/jmeter-allure-reporting/issues/6&quot;);
 vars.put(&quot;allure.label.owner&quot;,&quot;None Alex&quot;);
 vars.put(&quot;allure.description&quot;,&quot;Lorem Ipsum is simply dummy text of the printing and typesetting industry. \\nLorem Ipsum has been the industry&apos;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book&quot;);
 

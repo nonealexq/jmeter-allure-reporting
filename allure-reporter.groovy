@@ -2,7 +2,7 @@
  	Author: Alexey Chichuk
 	Description: Groovy for create allure-results for JMeter
 	Date Create: 29.07.2021
-	Date Update: 01.09.2023
+	Date Update: 01.08.2023
 	Version: 1.4.17
 */
 	version = '1.4.17'
@@ -124,7 +124,7 @@ SummarySubSteps = empty
 	Random UUID for creating attachments and result
 	Unique enough so that test results do not overlap
 */
-attachUUID 	= UUID.randomUUID().toString()
+attachUUID = UUID.randomUUID().toString()
 
 
 /*
@@ -151,7 +151,7 @@ if (Parameters.contains('tika_xml')) {
  */
 void addMainFieldsFromEnv(){
 	vars.entrySet().each { var ->
-		if ((var.getKey() =~ 'allure.' || var.getKey() =~ 'Allure') && !solotest){
+		if ( var.getKey() =~ 'allure.'  && !solotest ){
 			if ( (var.getKey().replaceAll('allure.', '') == 'name') ){
 				allureDisplayName = var.getValue()
 			}
@@ -189,10 +189,9 @@ if (vars.get('allure.parameters') != null) {
  */
 void addAllLabelsFromEnv(){
 	vars.entrySet().each { var ->
-		if ( (var.getKey() =~ 'allure.label') &&
-				!(var.getKey() =~ 'allure.label.tags')){
+		if ( var.getKey() =~ 'allure.label' && !(var.getKey() =~ 'allure.label.tag') ){
 			labels += '{' +
-					'"name":"' + var.getKey().replaceAll('allure.label.', '').replaceAll('Allure','').toLowerCase() + '",' +
+					'"name":"' + var.getKey().replaceAll('allure.label.', '').toLowerCase() + '",' +
 					'"value":"' + var.getValue().toString() + '"' +
 					'},'
 		}
@@ -201,9 +200,9 @@ void addAllLabelsFromEnv(){
 		}
 
 		/*
-			For several tags for example
-			vars.put("allure.label.tags","smoke,api,critical");
-			This is often useful if you are in MarkDown Table Data Driven Controller
+			For tag
+			multiple: vars.put("allure.label.tags","smoke,api,critical");
+			solo: vars.put("allure.label.tags","smoke");
 		 */
 		if ( (var.getKey() =~ 'allure.label.tags') && (!Parameters.contains('ignore_tags')) ){
 			if (vars.get('allure.label.tags') =~ ~/(.+)/) {
@@ -213,41 +212,27 @@ void addAllLabelsFromEnv(){
 				}
 			}
 		}
-	}
-}
-
-/*
-	Adding all links to allure report. One-by-one
- */
-void addAllLinksFromEnv(){
-	/*
-		Calc index of link hash
-	 */
-	tempVar = new HashSet(vars.entrySet()); indexHash = 0; indexAddLinks = 0
-	for (Iterator iter = tempVar.iterator(); iter.hasNext();) {
-		var = iter.next();
-		if ( var.getKey().startsWith("allure.link") ) {
-			indexHash++
-		}
-	}
-
-	vars.entrySet().each { var ->
-		if ( (var.getKey() =~ 'allure.link') && !(var.getKey() =~ 'allure.links') && (!Parameters.contains('ignore_links'))){
-			links += '{' +
-					'"name":"' + var.getKey().replaceAll('allure.link.', '')+ '",' +
-					'"url":"' + var.getValue().toString() + '"' +
-					'}'
-			indexAddLinks++
-			if (indexHash > indexAddLinks ){
-				links += ','
+		/*
+			For issues. Only for AllureTMS
+			multiple: vars.put("allure.label.issues","PROJECT_ID-100,PROJECT_ID-800");
+			solo: vars.put("allure.label.issues","PROJECT_ID-100");
+			For use: set Issue schemas settings in TMS project settings (key = issue)
+		 */
+		if ( (var.getKey() =~ 'allure.label.issues') ){
+			if (vars.get('allure.label.issues') =~ ~/(.+)/) {
+				def issues_memory = Matcher.lastMatcher[0][1].split(',')
+				for(int i = 0; i < issues_memory.size(); i++) {
+					addOneLabel("issue",issues_memory[i].toString())
+				}
 			}
 		}
 	}
 }
 
 /*
-	For several links for example
-	vars.put("allure.links","issue,https://github.com/nonealexq/jmeter-allure-reporting/issues/8," + "google.com,https://google.com");
+	For links for example
+	multiple: vars.put("allure.links","issue,https://github.com/nonealexq/jmeter-allure-reporting/issues/8," + "google.com,https://google.com");
+	solo:  vars.put("allure.links","issue,https://github.com/nonealexq/jmeter-allure-reporting/issues/8");
 	This is often useful if you are in MarkDown Table Data Driven Controller
  */
 if ( (vars.get('allure.links') != null)  && (!Parameters.contains('ignore_links')) ) {
@@ -258,11 +243,10 @@ if ( (vars.get('allure.links') != null)  && (!Parameters.contains('ignore_links'
 					'"name":"' + linkMatch[i-1] + '",' +
 					'"url":"' + linkMatch[i] + '"' +
 					'},'
-			vars.put('links', links)
 		}
 		links = links[0..-2]
 	}
-} else vars.remove('links')
+} else vars.remove('allure.links')
 
 /*
 	Clear all labels after stop
@@ -274,19 +258,6 @@ void clearAllLabelsFromEnv(){
 		if ( (var.getKey().startsWith("allure.label") && !solotest) ||
 				(var.getKey().startsWith("allure.links") && !solotest) ||
 					var.getKey().startsWith("allure.label.AS_ID") ) {
-			vars.remove(var.getKey());
-		}
-	}
-}
-
-/*
-	Clear all labels after stop
- */
-void clearAllLinksFromEnv(){
-	copy = new HashSet(vars.entrySet());
-	for (Iterator iter = copy.iterator(); iter.hasNext();) {
-		var = iter.next();
-		if ( (var.getKey().startsWith("allure.link") && !solotest)) {
 			vars.remove(var.getKey());
 		}
 	}
@@ -312,36 +283,12 @@ void clearAllureVariable(){
 	vars.put('critical', empty)
 	vars.put('allureCaseResult', 'passed')
 	vars.put('allureCaseFailReason', empty)
-	vars.put('issues', empty)
 	vars.put('allure.parameters', null)
 	vars.put('mainParameters', empty)
 	vars.put('loopCounter', null)
 	clearAllLabelsFromEnv()
-	clearAllLinksFromEnv()
 }
 
-/*
-	Adding jira issue to allure report
- */
-if (Parameters.contains('issues=')) {
-	if (Parameters =~ ~/issues=\[(.+?)]/) {
-		def issuesMemory = Matcher.lastMatcher[0][1].split(',')
-		for(int i = 0; i < issuesMemory.size(); i++) {
-			issues += '{' +
-					'"name":"issue",' +
-					'"value":"' + issuesMemory[i] + '"' +
-					'},'
-			vars.put('issues', issues)
-		}
-	}
-}
-if (vars.get('issues') == empty || vars.get('issues') == null){
-		issues = '{' +
-				'"name":"issue",' +
-				'"value":"' + empty + '"' +
-				'},'
-		vars.put('issues', issues)
-}
 
 /*
 	Add parameters to step
@@ -564,7 +511,6 @@ def addMoreMainStep(boolean addPoint){
 	}
 
 	addAllLabelsFromEnv()
-	addAllLinksFromEnv()
 	addMainFieldsFromEnv()
 	buildAllureFullName()
 
@@ -590,7 +536,6 @@ def addMoreMainStep(boolean addPoint){
 			'],' +
 			'"labels":[' +
 					labels +
-					vars.get('issues') +
 					'{' +
 						'"name":"host",' +
 						'"value":"' + prev.getThreadName().toString() + '"' +
