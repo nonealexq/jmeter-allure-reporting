@@ -117,7 +117,7 @@ The Markdown Table Data-driven Controller plugin allows you to use parameterized
    ![Optional Text](images/markdown-data-table.png)
 2. Add variables to the main annotations like this:
    ```bash
-   vars.put("allure.parameters","[capsule_name,second_example_name_variable]")
+   vars.put("allure.parameters","capsule_name,second_example_name_variable")
    ```
    ![Optional Text](images/test-parameter-annotations.png)
 3. Add parameters to the sub annotations like this:
@@ -131,6 +131,7 @@ The Markdown Table Data-driven Controller plugin allows you to use parameterized
    ![Optional Text](images/step-parameter-annotation.png)
 4. Run the tests and then generate the report.
    ![Optional Text](images/allure-report-parameter.png)
+
 
 ---
 
@@ -158,11 +159,25 @@ Content-type is set automatically. If the default content-type of the response i
 ### Add link
 You can add any links to your test like this:
    ```bash
-   vars.put("allure.link.issue","https://github.com/nonealexq/jmeter-allure-reporting/issues/6");
-vars.put("allure.link.docsLink","https://github.com/nonealexq/jmeter-allure-reporting/blob/master/README.md");
-vars.put("allure.link.myLink","https://github.com/nonealexq");
+  vars.put("allure.links","issue,https://github.com/nonealexq/jmeter-allure-reporting/issues/6");
    ```
+
+Also, you can add multiple links in one string like:
+   ```bash
+   vars.put("allure.links","issue,https://github.com/nonealexq/jmeter-allure-reporting/issues/8," + "google.com,https://google.com");
+   ```
+
 ![Optional Text](images/add-link-support.png)
+---
+### Add issues (Only for AllureTMS)
+You can add any issues to your test like this:
+```
+vars.put("allure.label.issue","JIRA_PROJECT_ID-100");
+```
+Also, you can add multiple issues in one string like:
+```
+vars.put("allure.label.issues","JIRA_PROJECT_ID-100,"JIRA_PROJECT_ID-129");
+```
 ---
 
 ### Add any custom label
@@ -172,6 +187,19 @@ If you want to add some custom label (for example severity/owner/tag) - you can 
   vars.put("allure.label.owner","None Alex");
   vars.put("allure.label.tag","smoke");
    ```
+Also, you can add multiple tags like this:
+   ```bash
+   vars.put("allure.label.tags","critical,smoke,api,");
+   ```
+---
+
+### Ignore links or tags annotations in your solostep tests  
+
+This is often useful if you are create tests in MarkDown Table Data Driven Controller.
+When you need to create report one of the test without tags/links from ```Declare allure annotations``` you can use this parameters:
+- ```ignore_links``` - will not add any links to your solostep test
+- ```ignore_tags``` -  will not add any tags to your solostep test
+
 ---
 Look and feel with additional features:
 ![Optional Text](images/epic-owner-description-in-jmeter.png)
