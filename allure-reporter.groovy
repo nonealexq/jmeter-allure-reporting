@@ -105,7 +105,7 @@ if ( prev.getContentType().replaceAll(";.*","").contains('/') ){
 	If we wanna see own content-type - write it force in parameters
  */
 if (Parameters.contains('content_type=')) {
-	if (Parameters =~ ~/content_type=\[(.+?)]/) {
+	if (Parameters =~ ~/content_type=\[(.+?)\]/) {
 		def content_memory = Matcher.lastMatcher[0][1].split(',')
 		responseType = content_memory[0]
 	}
@@ -166,7 +166,7 @@ void addMainFieldsFromEnv(){
 	Create main params to case
  */
 if (vars.get('allure.parameters') != null) {
-	if (vars.get('allure.parameters') =~ ~/\[(.+?)]/) {
+	if (vars.get('allure.parameters') =~ ~/(.+)/) {
 		def parametersMemory = Matcher.lastMatcher[0][1].split(',')
 		for(int i = 0; i < parametersMemory.size(); i++) {
 			tempVar = vars.get(parametersMemory[i])
@@ -189,7 +189,7 @@ if (vars.get('allure.parameters') != null) {
  */
 void addAllLabelsFromEnv(){
 	vars.entrySet().each { var ->
-		if ( var.getKey() =~ 'allure.label' && !(var.getKey() =~ 'allure.label.tag') ){
+		if ( var.getKey() =~ 'allure.label' ){
 			labels += '{' +
 					'"name":"' + var.getKey().replaceAll('allure.label.', '').toLowerCase() + '",' +
 					'"value":"' + var.getValue().toString() + '"' +
@@ -200,7 +200,7 @@ void addAllLabelsFromEnv(){
 		}
 
 		/*
-			For tag
+			For tags
 			multiple: vars.put("allure.label.tags","smoke,api,critical");
 			solo: vars.put("allure.label.tags","smoke");
 		 */
@@ -230,7 +230,7 @@ void addAllLabelsFromEnv(){
 }
 
 /*
-	For links for example
+	For links
 	multiple: vars.put("allure.links","issue,https://github.com/nonealexq/jmeter-allure-reporting/issues/8," + "google.com,https://google.com");
 	solo:  vars.put("allure.links","issue,https://github.com/nonealexq/jmeter-allure-reporting/issues/8");
 	This is often useful if you are in MarkDown Table Data Driven Controller
@@ -246,7 +246,7 @@ if ( (vars.get('allure.links') != null)  && (!Parameters.contains('ignore_links'
 		}
 		links = links[0..-2]
 	}
-} else vars.remove('allure.links')
+}
 
 /*
 	Clear all labels after stop
@@ -294,7 +294,7 @@ void clearAllureVariable(){
 	Add parameters to step
  */
 if (Parameters.contains('parameters=')) {
-	if (Parameters =~ ~/parameters=\[(.+?)]/) {
+	if (Parameters =~ ~/parameters=\[(.+?)\]/) {
 		def parametersMemory = Matcher.lastMatcher[0][1].split(',')
 		for(int i = 0; i < parametersMemory.size(); i++) {
 			tempVar = vars.get(parametersMemory[i])
@@ -382,7 +382,7 @@ void addAllSteps() {
 	Case is starting
  */
 
-if (( !Parameters.contains('stop') && !Parameters.empty && Parameters.contains('start') )) {
+if (( !Parameters.contains('stop') && Parameters.contains('start') )) {
 	vars.put('caseTimeStart', prev.getStartTime().toString())
 	addAllSteps()
 	addMoreMainStep(false)
@@ -392,7 +392,7 @@ if (( !Parameters.contains('stop') && !Parameters.empty && Parameters.contains('
 	Case continue
 */
 
-else if ( (Parameters.contains('stop') && !Parameters.empty || Parameters.contains('continue') )) {
+else if ( (Parameters.contains('stop') || Parameters.contains('continue') )) {
 	addAllSteps()
 	addMoreMainStep(true)
 }
@@ -532,7 +532,7 @@ def addMoreMainStep(boolean addPoint){
 			'"uuid":"' + attachUUID+'","historyId":"' + attachUUID + '",' +
 			'"fullName":"' + allureFullName + '",' +
 			'"parameters":[' +
-				vars.get('mainParameters') +
+				mainParameters +
 			'],' +
 			'"labels":[' +
 					labels +

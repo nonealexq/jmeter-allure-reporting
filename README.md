@@ -117,7 +117,7 @@ The Markdown Table Data-driven Controller plugin allows you to use parameterized
    ![Optional Text](images/markdown-data-table.png)
 2. Add variables to the main annotations like this:
    ```bash
-   vars.put("allure.parameters","[capsule_name,second_example_name_variable]")
+   vars.put("allure.parameters","capsule_name,second_example_name_variable")
    ```
    ![Optional Text](images/test-parameter-annotations.png)
 3. Add parameters to the sub annotations like this:
@@ -172,7 +172,7 @@ Also, you can add multiple links in one string like:
 ### Add issues (Only for AllureTMS)
 You can add any issues to your test like this:
 ```
-vars.put("allure.label.issues","JIRA_PROJECT_ID-100");
+vars.put("allure.label.issue","JIRA_PROJECT_ID-100");
 ```
 Also, you can add multiple issues in one string like:
 ```
@@ -185,7 +185,7 @@ If you want to add some custom label (for example severity/owner/tag) - you can 
    ```bash
   vars.put("allure.label.severity","critical");
   vars.put("allure.label.owner","None Alex");
-  vars.put("allure.label.tags","smoke");
+  vars.put("allure.label.tag","smoke");
    ```
 Also, you can add multiple tags like this:
    ```bash

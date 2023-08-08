@@ -100,7 +100,7 @@
             <stringProp name="script">vars.put(&quot;allure.label.feature&quot;,&quot;SpaceX-Capsules&quot;);
 vars.put(&quot;allure.label.story&quot;,&quot;Positive&quot;);
 vars.put(&quot;allure.name&quot;,&quot;Check capsules (with skipped params)&quot;);  
-vars.put(&quot;allure.label.tags&quot;,&quot;regress&quot;);
+vars.put(&quot;allure.label.tag&quot;,&quot;regress&quot;);
 vars.put(&quot;allure.label.issues&quot;,&quot;APP-1000,APP-1001&quot;);
 
 
@@ -556,7 +556,8 @@ vars.put(&quot;allure.name&quot;,&quot;Check some capsules in DB before critical
             <stringProp name="script">vars.put(&quot;allure.label.feature&quot;,&quot;SpaceX-Capsules&quot;);
 vars.put(&quot;allure.label.story&quot;,&quot;Links ignore parameter in one of solostep test. With multiple links&quot;);
 vars.put(&quot;allure.links&quot;,&quot;issue,https://github.com/nonealexq/jmeter-allure-reporting/issues/8,&quot; + &quot;google.com,https://google.com&quot;);
-
+vars.put(&quot;allure.label.owner&quot;,&quot;None Alex&quot;);
+vars.put(&quot;allure.label.tags&quot;,&quot;example_tag_1,example_tag_2&quot;);
 
 /*
  * to create case report with single step
@@ -717,6 +718,7 @@ vars.put(&quot;allure.links&quot;,&quot;issue,https://github.com/nonealexq/jmete
             <stringProp name="script">vars.put(&quot;allure.label.feature&quot;,&quot;SpaceX-Capsules&quot;);
 vars.put(&quot;allure.label.story&quot;,&quot;Tags ignore parameter in one of solostep test. With multuple tags&quot;);
 vars.put(&quot;allure.label.tags&quot;,&quot;critical,smoke&quot;);
+vars.remove(&quot;allure.links&quot;);
 
 
 /*
@@ -869,81 +871,6 @@ vars.put(&quot;allure.label.tags&quot;,&quot;critical,smoke&quot;);
             <hashTree/>
           </hashTree>
         </hashTree>
-        <yongfa365.jmeter.control.MarkdownTableDataDrivenController guiclass="yongfa365.jmeter.control.gui.MarkdownTableDataDrivenControllerGui" testclass="yongfa365.jmeter.control.MarkdownTableDataDrivenController" testname="Parametrized tests" enabled="true">
-          <stringProp name="Markdown.Data"> capsule_name                                         | test_name                                  | error_message_expected    | tags&#xd;
- ${__RandomString(10,qwertyuiopasdfghjklzxcvbnm)}     | RandomString Capsule name                  | Not Found                 | &#xd;
- ${__RandomString(256,qwertyuiopasdfghjklzxcvbnm)}    | RandomString more then 256 Capsule name    | Not Found                 | smoke,api,critical&#xd;
- ${__Random(1,999)}                                   | RandomNumber name                          | Not Found                 | smoke&#xd;
- null                                                 | Nullable name                              | Not Found                 | &#xd;
- 1=1                                                  | Try Inject                                 | Not Found                 | sql_inject</stringProp>
-        </yongfa365.jmeter.control.MarkdownTableDataDrivenController>
-        <hashTree>
-          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Declare allure annotations" enabled="true">
-            <stringProp name="cacheKey">false</stringProp>
-            <stringProp name="filename"></stringProp>
-            <stringProp name="parameters"></stringProp>
-            <stringProp name="script">vars.put(&quot;allure.label.feature&quot;,&quot;SpaceX-Capsules&quot;);
-vars.put(&quot;allure.label.story&quot;,&quot;Validation - parameterized&quot;);
-vars.put(&quot;allure.label.tags&quot;,&quot;${tags}&quot;);
-vars.put(&quot;allure.parameters&quot;,&quot;[capsule_name,test_name]&quot;)
-
-
-/*
- * to create case report with single step
- * do not use parameters start/continue/stop
- * and do not create variable AllureCaseName
- */</stringProp>
-            <stringProp name="scriptLanguage">groovy</stringProp>
-          </JSR223Sampler>
-          <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="${test_name}" enabled="true">
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-              <collectionProp name="Arguments.arguments"/>
-            </elementProp>
-            <stringProp name="HTTPSampler.domain"></stringProp>
-            <stringProp name="HTTPSampler.port"></stringProp>
-            <stringProp name="HTTPSampler.protocol"></stringProp>
-            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/v3/capsules/${capsule_name}</stringProp>
-            <stringProp name="HTTPSampler.method">GET</stringProp>
-            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          </HTTPSamplerProxy>
-          <hashTree>
-            <com.atlantbh.jmeter.plugins.jsonutils.jsonformatter.JSONFormatter guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonformatter.gui.JSONFormatterGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonformatter.JSONFormatter" testname="jp@gc - JSON Format Post Processor" enabled="true"/>
-            <hashTree/>
-            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Ignore 404" enabled="true">
-              <collectionProp name="Asserion.test_strings"/>
-              <stringProp name="Assertion.custom_message"></stringProp>
-              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-              <boolProp name="Assertion.assume_success">true</boolProp>
-              <intProp name="Assertion.test_type">16</intProp>
-            </ResponseAssertion>
-            <hashTree/>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Check error" enabled="true">
-              <stringProp name="JSON_PATH">$.error</stringProp>
-              <stringProp name="EXPECTED_VALUE">${error_message_expected}</stringProp>
-              <boolProp name="JSONVALIDATION">true</boolProp>
-              <boolProp name="EXPECT_NULL">false</boolProp>
-              <boolProp name="INVERT">false</boolProp>
-              <boolProp name="ISREGEX">false</boolProp>
-            </JSONPathAssertion>
-            <hashTree/>
-            <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Allure.log.info" enabled="true">
-              <stringProp name="cacheKey">false</stringProp>
-              <stringProp name="filename">${_ALLURE_CONFIG_PATH}</stringProp>
-              <stringProp name="parameters">parameters=[error_message_expected]</stringProp>
-              <stringProp name="script"></stringProp>
-              <stringProp name="scriptLanguage">groovy</stringProp>
-            </JSR223Assertion>
-            <hashTree/>
-          </hashTree>
-        </hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="With description and owner" enabled="true"/>
         <hashTree>
           <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Declare allure annotations and tag" enabled="true">
@@ -955,7 +882,7 @@ vars.put(&quot;allure.label.story&quot;,&quot;Error&quot;);
 vars.put(&quot;allure.name&quot;,&quot;With description and owner v2&quot;);
 vars.put(&quot;allure.label.owner&quot;,&quot;None Alex&quot;);
 vars.put(&quot;allure.links&quot;,&quot;issue,https://github.com/nonealexq/jmeter-allure-reporting/issues/6,&quot; + &quot;docsLink,https://github.com/nonealexq/jmeter-allure-reporting/blob/master/README.md,&quot; + &quot;myLink,https://github.com/nonealexq&quot;);
-vars.put(&quot;allure.label.tags&quot;,&quot;smoke&quot;);
+vars.put(&quot;allure.label.tag&quot;,&quot;smoke&quot;);
 vars.put(&quot;allure.description&quot;,&quot;Lorem Ipsum is simply dummy text of the printing and typesetting industry. \\nLorem Ipsum has been the industry&apos;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book&quot;);
 
 /*
@@ -1134,6 +1061,81 @@ vars.put(&quot;allure.description&quot;,&quot;Lorem Ipsum is simply dummy text o
               <stringProp name="cacheKey">false</stringProp>
               <stringProp name="filename">${_ALLURE_CONFIG_PATH}</stringProp>
               <stringProp name="parameters">stop</stringProp>
+              <stringProp name="script"></stringProp>
+              <stringProp name="scriptLanguage">groovy</stringProp>
+            </JSR223Assertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+        <yongfa365.jmeter.control.MarkdownTableDataDrivenController guiclass="yongfa365.jmeter.control.gui.MarkdownTableDataDrivenControllerGui" testclass="yongfa365.jmeter.control.MarkdownTableDataDrivenController" testname="Parametrized tests" enabled="true">
+          <stringProp name="Markdown.Data"> capsule_name                                         | test_name                                  | error_message_expected    | tags&#xd;
+ ${__RandomString(10,qwertyuiopasdfghjklzxcvbnm)}     | RandomString Capsule name                  | Not Found                 | &#xd;
+ ${__RandomString(256,qwertyuiopasdfghjklzxcvbnm)}    | RandomString more then 256 Capsule name    | Not Found                 | smoke,api,critical&#xd;
+ ${__Random(1,999)}                                   | RandomNumber name                          | Not Found                 | smoke&#xd;
+ null                                                 | Nullable name                              | Not Found                 | &#xd;
+ 1=1                                                  | Try Inject                                 | Not Found                 | sql_inject</stringProp>
+        </yongfa365.jmeter.control.MarkdownTableDataDrivenController>
+        <hashTree>
+          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Declare allure annotations" enabled="true">
+            <stringProp name="cacheKey">false</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">vars.put(&quot;allure.label.feature&quot;,&quot;SpaceX-Capsules&quot;);
+vars.put(&quot;allure.label.story&quot;,&quot;Validation - parameterized&quot;);
+vars.put(&quot;allure.label.tags&quot;,&quot;${tags}&quot;);
+vars.put(&quot;allure.parameters&quot;,&quot;capsule_name,test_name&quot;)
+
+
+/*
+ * to create case report with single step
+ * do not use parameters start/continue/stop
+ * and do not create variable AllureCaseName
+ */</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223Sampler>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="${test_name}" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/v3/capsules/${capsule_name}</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <com.atlantbh.jmeter.plugins.jsonutils.jsonformatter.JSONFormatter guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonformatter.gui.JSONFormatterGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonformatter.JSONFormatter" testname="jp@gc - JSON Format Post Processor" enabled="true"/>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Ignore 404" enabled="true">
+              <collectionProp name="Asserion.test_strings"/>
+              <stringProp name="Assertion.custom_message"></stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+              <boolProp name="Assertion.assume_success">true</boolProp>
+              <intProp name="Assertion.test_type">16</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Check error" enabled="true">
+              <stringProp name="JSON_PATH">$.error</stringProp>
+              <stringProp name="EXPECTED_VALUE">${error_message_expected}</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+            <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Allure.log.info" enabled="true">
+              <stringProp name="cacheKey">false</stringProp>
+              <stringProp name="filename">${_ALLURE_CONFIG_PATH}</stringProp>
+              <stringProp name="parameters">parameters=[error_message_expected]</stringProp>
               <stringProp name="script"></stringProp>
               <stringProp name="scriptLanguage">groovy</stringProp>
             </JSR223Assertion>
