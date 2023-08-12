@@ -2,10 +2,10 @@
  	Author: Alexey Chichuk
 	Description: Groovy for create allure-results for JMeter
 	Date Create: 29.07.2021
-	Date Update: 01.08.2023
-	Version: 1.4.17
+	Date Update: 12.08.2023
+	Version: 1.5.0
 */
-	version = '1.4.17'
+	version = '1.5.0'
 
 import java.time.LocalDateTime
 import groovy.json.JsonSlurper
