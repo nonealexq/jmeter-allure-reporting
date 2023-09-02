@@ -25,6 +25,7 @@ However, please note that it is **NOT USABLE** for load testing.
 - [How it works](#how-it-works)
 - [Additional features](#additional-features)
 - [Log details to console](#log-details-to-console)
+- [Configure build in CI](#configure-build-in-ci)
 ---
 
 ##  Quick start via docker-compose
@@ -222,6 +223,46 @@ We do not recommend storing sensitive information in the reports. By default, al
    ![Optional Text](images/log-details.png)
 5. An error is logged if the start, continue, or stop annotations are not correct.
    ![Optional Text](images/log-details-if-annotations-not-correct.png)
+
+---
+## Configure build in CI
+### Test Fragments info
+If you want to use **Test Fragments** with prefix in CI - use this structure of .jmx files:
+```
+├── project-folder/
+│   ├── test-plan/
+│   │   ├── service-one.jmx
+│   │   ├── service-two.jmx
+│   │   ├── test_fragments/ 
+│   │   │   ├── test-fragment-one.jmx
+│   │   │   └── test-fragment-two.jmx
+│   │   └──
+│   └──    
+└── 
+```
+Default docker ```nonealexq/jmeter:5.6.2``` container will use include_prefix like ```/mnt/jmeter/test-plan/test_fragments/```. It will be equated your local include_prefix.
+
+Environment in container:
+```
+ENV JMETER_HOME="/opt/apache-jmeter/bin"
+ENV JMETER_LIB="/opt/apache-jmeter/lib"
+ENV TEST_FRAGMENTS_FOLDER="/mnt/jmeter/test-plan/test_fragments/"
+```
+
+### Docker compose info
+Use ```docker-compose up``` to clone data to container and run tests
+
+Volumes:
+```
+    volumes:
+      - ./:/mnt/jmeter
+      - ./allure-results:/result/allure-results
+```
+If you want to save results - use
+```
+docker cp jmeter:/result ./results
+```
+It will copy your results from container to your agent.
 
 ---
 

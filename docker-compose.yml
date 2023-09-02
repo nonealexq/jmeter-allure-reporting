@@ -2,7 +2,7 @@ version: "3.3"
 services:
   jmeter:
     container_name: "jmeter"
-    image: nonealexq/jmeter:5.4.3
+    image: nonealexq/jmeter:5.6.2
     volumes:
       - ./:/mnt/jmeter
       - ./allure-results:/result/allure-results
