@@ -2,16 +2,17 @@
  	Author: Alexey Chichuk
 	Description: Groovy for create allure-results for JMeter
 	Date Create: 29.07.2021
-	Date Update: 12.08.2023
-	Version: 1.5.0
+	Date Update: 07.09.2024
+	Version: 1.5.1
 */
-	version = '1.5.0'
+	version = '1.5.1'
 
-import java.time.LocalDateTime
 import groovy.json.JsonSlurper
 import org.apache.jmeter.util.Document
-import java.util.regex.Matcher
 
+import java.nio.charset.StandardCharsets
+import java.time.LocalDateTime
+import java.util.regex.Matcher
 /*
 	Annotations AllureStory и AllureFeature, must be initialized ahead of time before tests or in
 	start of controller. For example in JSR223 Sampler:
@@ -589,7 +590,12 @@ if (loopCounter > 100){
 if ((!Parameters.contains('stop') && !Parameters.contains('continue')  && !Parameters.contains('start') && !Parameters.contains('no_report')) ||
 		Parameters.contains('stop')  && !Parameters.contains('no_report')) {
 
-	var result = new PrintWriter(allureReportPath  +'/' + attachUUID + '-result.json')
+	def result = new PrintWriter(
+			new OutputStreamWriter(
+					new FileOutputStream(allureReportPath + '/' + attachUUID + '-result.json'),
+					StandardCharsets.UTF_8
+			)
+	)
 	result.write(vars.get('AResult'))
 	result.close()
 
